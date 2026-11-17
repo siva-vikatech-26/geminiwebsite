@@ -1,60 +1,12 @@
-/* Gemini Digital Solution – contact form
- *
- * By default the form just shows a thank-you message (nothing is sent).
- * To receive enquiries, choose ONE option below:
- *
- * 1) Email via Formspree (free): create a form at https://formspree.io,
- *    then paste its URL here, e.g. "https://formspree.io/f/abcdwxyz".
- * 2) WhatsApp: put your number with country code (no +), e.g. "919876543210".
- *    The enquiry opens in WhatsApp, ready to send.
- */
-var FORM_ENDPOINT = "";   // option 1
-var WHATSAPP_NUMBER = ""; // option 2
-
-(function () {
-  var form = document.getElementById("contact-form");
-  var thanks = document.getElementById("form-thanks");
-  var nameOut = document.getElementById("thanks-name");
-  var reset = document.getElementById("form-reset");
-  if (!form) return;
-
-  function showThanks(name) {
-    nameOut.textContent = (name || "there").split(" ")[0];
-    form.hidden = true;
-    thanks.hidden = false;
-  }
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var data = new FormData(form);
-    var name = (data.get("name") || "").toString().trim();
-
-    if (WHATSAPP_NUMBER) {
-      var text = "New enquiry – Gemini Digital Solution\n" +
-        "Name: " + name + "\nCompany: " + data.get("company") +
-        "\nEmail: " + data.get("email") + "\nPhone: " + data.get("phone") +
-        "\nNeed: " + data.get("type") + "\nMessage: " + data.get("message");
-      window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
-      showThanks(name);
-      return;
-    }
-
-    if (FORM_ENDPOINT) {
-      var btn = form.querySelector('button[type="submit"]');
-      btn.disabled = true; btn.textContent = "Sending…";
-      fetch(FORM_ENDPOINT, { method: "POST", body: data, headers: { Accept: "application/json" } })
-        .then(function (r) { if (!r.ok) throw new Error(); showThanks(name); form.reset(); })
-        .catch(function () { alert("Sorry, your message could not be sent. Please call or email us."); })
-        .finally(function () { btn.disabled = false; btn.textContent = "Send enquiry"; });
-      return;
-    }
-
-    showThanks(name);
-  });
-
-  reset.addEventListener("click", function () {
-    form.reset();
-    thanks.hidden = true;
-    form.hidden = false;
-  });
-})();
+﻿
+/* Gemini Digital Solution interactions */
+var btn=document.querySelector('.mobile-menu-btn');
+var nav=document.querySelector('.nav-list');
+btn.addEventListener('click',function(){nav.classList.toggle('is-open');var ex=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!ex));});
+var header=document.querySelector('.site-header');window.addEventListener('scroll',function(){if(window.scrollY>20){header.classList.add('is-scrolled');}else{header.classList.remove('is-scrolled');}});
+var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target);}}});document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el);});
+var form=document.getElementById('contact-form');var thanks=document.getElementById('form-thanks');var btn=form.querySelector('button[type=submit]');form.addEventListener('submit',function(e){e.preventDefault();btn.classList.add('loading');btn.disabled=true;setTimeout(function(){form.style.display='none';thanks.hidden=false;btn.classList.remove('loading');btn.disabled=false;},800);});
+document.getElementById('form-reset').addEventListener('click',function(){thanks.hidden=true;form.style.display='flex';form.reset();});
+var sections=document.querySelectorAll('section[id]');var links=document.querySelectorAll('.nav-list a[href^=#]');function highlight(){var pos=window.scrollY+100;sections.forEach(function(sec){var top=sec.offsetTop;var bottom=top+sec.offsetHeight;var id=sec.getAttribute('id');if(pos>=top&&pos<bottom){links.forEach(function(l){l.classList.remove('active');if(l.getAttribute('href')===
+=\
+=\x27#\x27+id){l.classList.add('\x27active\x27');}});}});}window.addEventListener('\x27scroll\x27',highlight);highlight();
